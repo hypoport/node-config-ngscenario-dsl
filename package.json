@@ -2,7 +2,7 @@
   "name": "node-config-ngscenario-dsl",
   "version": "1.0.0",
   "author": "Hypoport AG",
-  "description": "",
+  "description": "A simple angular-scenario DSL for configuring a node.js backend directly from your E2E tests",
   "contributors": [
     {
       "name": "Daniel Bechler",
