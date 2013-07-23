@@ -1,0 +1,40 @@
+{
+  "name": "node-config-ngscenario-dsl",
+  "version": "1.0.0",
+  "author": "Hypoport AG",
+  "description": "",
+  "contributors": [
+    {
+      "name": "Daniel Bechler",
+      "email": "daniel.bechler@hypoport.de"
+    },
+    {
+      "name": "Andreas Marek",
+      "email": "andreas.marek@hypoport.de"
+    }
+  ],
+  "main": "./lib/node-config-ngscenario-dsl.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hypoport/node-config-ngscenario-dsl"
+  },
+  "keywords": [
+    "angularjs",
+    "ngscenario"
+  ],
+  "dependencies": {
+    "underscore": "1.5.x",
+    "express": "3.3.x"
+  },
+  "analyze": false,
+  "devDependencies": {
+    "jasmine-node": "1.10.x",
+    "request": "2.22.x"
+  },
+  "bundledDependencies": [
+  ],
+  "license": "Simplified BSD License",
+  "engines": {
+    "node": ">=0.10"
+  }
+}
