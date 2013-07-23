@@ -1,6 +1,6 @@
 {
   "name": "node-config-ngscenario-dsl",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Hypoport AG",
   "description": "A simple angular-scenario DSL for configuring a node.js backend directly from your E2E tests",
   "contributors": [
@@ -19,8 +19,10 @@
     "url": "https://github.com/hypoport/node-config-ngscenario-dsl"
   },
   "keywords": [
-    "angularjs",
-    "ngscenario"
+    "angular",
+    "angular.js",
+    "e2e-testing",
+    "ng-scenario"
   ],
   "dependencies": {
     "underscore": "1.5.x",
