@@ -48,7 +48,7 @@ angular.scenario.dsl('server', function () {
     return this.addFutureAction('clear node', function ($window, $document, done) {
       jQuery.ajax({
         type: 'get',
-        url: '/clear',
+        url: '/clearConfig',
         success: function () {
           done();
         },

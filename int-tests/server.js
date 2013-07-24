@@ -8,11 +8,10 @@ var server;
 app = express();
 app.use(express.bodyParser());
 
-nodeConfigNgScenario.setup(app);
 
-app.get('/index.html', function (req, res) {
-  res.sendfile('index.html');
-});
+app.use(express.static(__dirname + '/page'));
+
+nodeConfigNgScenario.setup(app);
 
 server = http.createServer(app);
 server.listen(2888);
