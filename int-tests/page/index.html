@@ -10,10 +10,10 @@
         <input type="text" id="request-url" name="request-url" ng-model="requestUrl"/>
     </label>
     <label for="response-code">Response Code:
-        <input type="text" id="response-code" name="response-url" ng-model="responseCode"/>
+        <input readonly="readonly" type="text" id="response-code" name="response-url" ng-model="responseCode"/>
     </label>
     <label for="response-body">Response Body:
-        <input type="text" id="response-body" name="response-body" ng-model="responseBody"/>
+        <input readonly="readonly" type="text" id="response-body" name="response-body" ng-model="responseBody"/>
     </label>
     <button id="send-button" type="button" ng-click="doSend()">Send Request</button>
 </div>

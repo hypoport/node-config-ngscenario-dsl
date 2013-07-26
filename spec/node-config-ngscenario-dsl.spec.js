@@ -22,59 +22,117 @@ var http = require('http');
 
 var baseUrl = "http://127.0.0.1:2888";
 
+function createRequestConfig(method, statusCode, url) {
+  return {
+    method: 'POST',
+    url: baseUrl + '/config',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      requestConfig: {
+        method: method || 'GET',
+        url: url
+      },
+      statusCode: statusCode
+    })
+  };
+}
+
 describe('Node Config NgScenario', function () {
   var app;
   var server;
 
-  beforeEach(function () {
-    app = express();
-    app.use(express.bodyParser());
-    nodeConfigNgScenario.setup(app);
+  describe('given a server with existing routes', function () {
+    beforeEach(function () {
+      app = express();
+      app.use(express.bodyParser());
+      nodeConfigNgScenario.setup(app);
 
-    server = http.createServer(app);
-    server.listen(2888);
+      app.get('/*', function (req, res) {
+        res.set('Content-Type', 'text/plain');
+        res.send(200, 'Catch-all');
+      });
+
+      server = http.createServer(app);
+      server.listen(2888);
+    });
+
+    afterEach(function () {
+      server.close();
+    });
+
+    describe('when a request is configured', function () {
+      beforeEach(function (done) {
+        var configRequest = createRequestConfig('GET', 500, '/dummyRequest');
+        request(configRequest, function (error, response, body) {
+          expect(response.statusCode).toEqual(200);
+          done();
+        });
+      });
+
+      describe('and then cleared', function () {
+        beforeEach(function (done) {
+          request(baseUrl + "/clearConfig", function (error, resonse, body) {
+            expect(resonse.statusCode).toEqual(200);
+            done();
+          });
+        });
+        it('should restore the original state', function (done) {
+          request(baseUrl + "/dummyRequest", function (error, response, body) {
+            expect(response.statusCode).toEqual(200);
+            expect(body).toEqual('Catch-all');
+            done();
+          });
+        });
+      });
+    });
   });
 
-  afterEach(function () {
-    server.close();
-  });
+  describe('given a server without any routes', function () {
+    beforeEach(function () {
+      app = express();
+      app.use(express.bodyParser());
 
-  it('should config node to return a 500 response', function (done) {
+      nodeConfigNgScenario.setup(app);
 
-    request(baseUrl + "/dummyRequest", function (error, response, body) {
-      expect(response.statusCode).toEqual(404);
-      done();
+      server = http.createServer(app);
+      server.listen(2888);
     });
 
-    var configRequest = {
-      method: "POST",
-      url: baseUrl + "/config",
-      headers: {"Content-type": "application/json"},
-      body: JSON.stringify({
-        requestConfig: {method: 'GET', url: "/dummyRequest"},
-        statusCode: 500
-      })
-    };
-
-    request(configRequest, function (error, response, body) {
-      expect(response.statusCode).toEqual(200);
-      done();
+    afterEach(function () {
+      server.close();
     });
 
-    request(baseUrl + "/dummyRequest", function (error, resonse, body) {
-      expect(resonse.statusCode).toEqual(500);
-      done();
+    it('should return 404 for dummy request', function (done) {
+      request(baseUrl + "/dummyRequest", function (error, response) {
+        expect(response.statusCode).toEqual(404);
+        done();
+      });
     });
 
-    request(baseUrl + "/clearConfig", function (error, resonse, body) {
-      expect(resonse.statusCode).toEqual(200);
-      done();
-    });
+    describe('when a dummy request handler gets configured', function () {
+      beforeEach(function (done) {
+        var configRequest = createRequestConfig('GET', 500, '/dummyRequest');
+        request(configRequest, function (error, response) {
+          expect(response.statusCode).toEqual(200);
+          done();
+        });
+      });
 
-    request(baseUrl + "/dummyRequest", function (error, response, body) {
-      expect(response.statusCode).toEqual(404);
-      done();
-    });
+      afterEach(function (done) {
+        request(baseUrl + "/clearConfig", function (error, resonse) {
+          expect(resonse.statusCode).toEqual(200);
+          done();
+        });
+      });
 
+      it('a request to it should return the configured response', function (done) {
+        request(baseUrl + "/dummyRequest", function (error, resonse) {
+          expect(resonse.statusCode).toEqual(500);
+          done();
+        });
+      });
+    });
   });
 });
