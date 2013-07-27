@@ -10,10 +10,11 @@ describe('ngscenario nodejs dsl test', function () {
     element("#send-button").click();
     expect(input("responseCode").val()).toEqual("404");
 
-    server().onRequest({method: 'GET', url: "/dummyRequest"}).respondWith(500);
+    server().onRequest({method: 'GET', url: "/dummyRequest"}).respondWith(500, {data: "Some error message"});
 
     element("#send-button").click();
     expect(input("responseCode").val()).toEqual("500");
+    expect(input("responseBody").val()).toEqual("Some error message");
 
     server().clear();
 
