@@ -30,6 +30,10 @@
   },
   "analyze": false,
   "devDependencies": {
+    "grunt": "0.4.x",
+    "grunt-jasmine-node": "0.1.x",
+    "grunt-karma": "0.4.x",
+    "matchdep": "0.1.x",
     "jasmine-node": "1.10.x",
     "request": "2.22.x"
   },
