@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/hypoport/node-config-ngscenario-dsl.png)](https://travis-ci.org/hypoport/node-config-ngscenario-dsl.png)
+
 ## Introduction
 
 A simple angular-scenario DSL for configuring a node.js backend directly from your e2e-tests. 
