@@ -156,7 +156,7 @@ describe('Node Config NgScenario', function () {
         makeRequest('/testUrl', 200, done);
         makeRequest('/testUrl', 200, done);
 
-        request(createHasReceivedRequest('/testUrl'), function (error, response, body) {
+        request(createHasReceivedRequest('GET', '/testUrl'), function (error, response, body) {
           expect(response.statusCode).toEqual(200);
           expect(parseInt(response.body)).toEqual(2);
           done();
@@ -178,7 +178,7 @@ describe('Node Config NgScenario', function () {
 
         makeRequest('/testUrl', 200, done);
 
-        request(createHasReceivedRequest('/testUrl'), function (error, response, body) {
+        request(createHasReceivedRequest('GET', '/testUrl'), function (error, response, body) {
           expect(response.statusCode).toEqual(200);
           expect(parseInt(response.body)).toEqual(0);
           done();
@@ -190,7 +190,7 @@ describe('Node Config NgScenario', function () {
         makeRequest('/testUrl', 200, done);
         makeClearConfigRequest(done);
 
-        request(createHasReceivedRequest('/testUrl'), function (error, response, body) {
+        request(createHasReceivedRequest('GET', '/testUrl'), function (error, response, body) {
           expect(response.statusCode).toEqual(200);
           expect(parseInt(response.body)).toEqual(0);
           done();
@@ -264,4 +264,62 @@ describe('Node Config NgScenario', function () {
     });
 
   });
-});
+
+  describe('The cache-control response header', function () {
+
+    beforeEach(function () {
+      app = express();
+      app.use(express.bodyParser());
+      nodeConfigNgScenario.setup(app);
+      server = http.createServer(app);
+      server.listen(2888);
+    });
+
+    afterEach(function () {
+      server.close();
+    });
+
+    it('should be set for the config request', function (done) {
+      request(createRequestConfig('GET', 500, '/dummyRequest'), function (error, response, body) {
+        expect(response.headers['cache-control']).toEqual('no-cache');
+        done();
+      });
+    });
+
+    it('should be set for the clearConfig request', function (done) {
+      request(baseUrl + '/clearConfig', function (error, response, body) {
+        expect(response.headers['cache-control']).toEqual('no-cache');
+        done();
+      });
+    });
+
+    it('should be set for the hasReceive request', function (done) {
+      request(createHasReceivedRequest('GET', '/testUrl'), function (error, response, body) {
+        expect(response.headers['cache-control']).toEqual('no-cache');
+        done();
+      });
+    });
+
+    it('should be set for the expectRequest request', function (done) {
+      request(createExpectRequest('GET', '/testUrl'), function (error, response, body) {
+        expect(response.headers['cache-control']).toEqual('no-cache');
+        done();
+      });
+    });
+
+    it('should be set for a registered request', function (done) {
+
+      request(createRequestConfig('GET', 200, '/dummyRequest'), function (error, response) {
+        expect(response.statusCode).toEqual(200);
+        done();
+      });
+
+      request(baseUrl + '/dummyRequest', function (error, response) {
+        expect(response.statusCode).toEqual(200);
+        expect(response.headers['cache-control']).toEqual('no-cache');
+        done();
+      });
+    });
+  });
+})
+;
