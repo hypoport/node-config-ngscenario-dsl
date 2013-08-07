@@ -144,22 +144,55 @@ describe('Node Config NgScenario', function () {
 
     describe('when a request is expected', function () {
 
-      beforeEach(function (done) {
-        request(createExpectRequest('GET', '/testUrl'), function (error, response, body) {
-          expect(response.statusCode).toEqual(200);
-          done();
+      describe('should count the number of times the request is received', function () {
+
+        it('for two request on the same url', function (done) {
+
+          request(createExpectRequest('GET', '/testUrl'), function (error, response, body) {
+            expect(response.statusCode).toEqual(200);
+            done();
+          });
+
+          makeRequest('/testUrl', 200, done);
+          makeRequest('/testUrl', 200, done);
+
+          request(createHasReceivedRequest('GET', '/testUrl'), function (error, response, body) {
+            expect(response.statusCode).toEqual(200);
+            expect(parseInt(response.body)).toEqual(2);
+            done();
+          });
+
         });
-      });
 
-      it('should count the number of times the request is received', function (done) {
+        it('for one request and two requests on different urls', function (done) {
 
-        makeRequest('/testUrl', 200, done);
-        makeRequest('/testUrl', 200, done);
+          request(createExpectRequest('GET', '/testUrl1'), function (error, response, body) {
+            expect(response.statusCode).toEqual(200);
+            done();
+          });
 
-        request(createHasReceivedRequest('GET', '/testUrl'), function (error, response, body) {
-          expect(response.statusCode).toEqual(200);
-          expect(parseInt(response.body)).toEqual(2);
-          done();
+          request(createExpectRequest('GET', '/testUrl2'), function (error, response, body) {
+            expect(response.statusCode).toEqual(200);
+            done();
+          });
+
+          makeRequest('/testUrl1', 200, done);
+
+          makeRequest('/testUrl2', 200, done);
+          makeRequest('/testUrl2', 200, done);
+
+          request(createHasReceivedRequest('GET', '/testUrl1'), function (error, response, body) {
+            expect(response.statusCode).toEqual(200);
+            expect(parseInt(response.body)).toEqual(1);
+            done();
+          });
+
+          request(createHasReceivedRequest('GET', '/testUrl2'), function (error, response, body) {
+            expect(response.statusCode).toEqual(200);
+            expect(parseInt(response.body)).toEqual(2);
+            done();
+          });
+
         });
 
       });
