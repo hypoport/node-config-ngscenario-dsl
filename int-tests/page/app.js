@@ -4,8 +4,12 @@ angular.module('app', [])
     $scope.responseCode = "";
     $scope.responseBody = "";
     $scope.doSend = function () {
-      $http.get($scope.requestUrl)
-        .success(function (data, status, headers, config) {
+      $http({
+        method: 'GET',
+        url: $scope.requestUrl,
+        timeout: 5000
+      }).
+        success(function (data, status, headers, config) {
           $scope.responseCode = status;
           $scope.responseBody = data;
         }).
