@@ -55,7 +55,7 @@ server.listen(2888);
 
 Include [node-config-ngscenario-dsl.js](https://github.com/hypoport/node-config-ngscenario-dsl/blob/master/client-src/node-config-ngscenario-dsl.js) and [jQuery](http://jquery.com) (>=1.9) in your e2e-tests.
 
-__Note__: The jQuery dependency will be removed once Angular 1.2 is released. (See #2)
+__Note__: The jQuery dependency will be removed once Angular 1.2 is released. (See [this issue](https://github.com/hypoport/node-config-ngscenario-dsl/issues/2))
 
 Then start using the DSL in your e2e-tests:
 
