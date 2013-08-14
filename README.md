@@ -9,6 +9,9 @@ It consists of two parts:
 1. A node module providing an HTTP-based API for remote server configuration.
 2. An angular-scenario DSL providing a convenient client interface to the HTTP-based API.
 
+__Note__: This library is currently tested against Angular 1.1.5, but it should also work with previous versions.
+
+
 ## Features
 
 - Configure node backend-request behavior from your e2e tests
@@ -50,7 +53,9 @@ server.listen(2888);
 
 ### Client
 
-Include [node-config-ngscenario-dsl.js](https://github.com/hypoport/node-config-ngscenario-dsl/blob/master/client-src/node-config-ngscenario-dsl.js) and [jQuery](http://jquery.com) in your e2e-tests.
+Include [node-config-ngscenario-dsl.js](https://github.com/hypoport/node-config-ngscenario-dsl/blob/master/client-src/node-config-ngscenario-dsl.js) and [jQuery](http://jquery.com) (>=1.9) in your e2e-tests.
+
+__Note__: The jQuery dependency will be removed once Angular 1.2 is released. (See #2)
 
 Then start using the DSL in your e2e-tests:
 
@@ -64,6 +69,10 @@ server().onRequest({ method: 'GET', url: "/dummyRequest" }).respondWith(500);
 server().clear();
 
 ```
+## More Information
+
+* See [API Documentation](https://github.com/hypoport/node-config-ngscenario-dsl/wiki/API-Documentation) for a detailed API description.
+* Have a look at the [example](https://github.com/hypoport/node-config-ngscenario-dsl/tree/master/int-tests) directory for a complete working example including karma and node server.
 
 ## Contributing
 
