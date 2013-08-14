@@ -1,36 +1,39 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Node-config-ngscenario-dsl by hypoport</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <title>Node-config-ngscenario-dsl by hypoport</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1 class="header">Node-config-ngscenario-dsl</h1>
-        <p class="header">A simple angular-scenario DSL for configuring a node.js backend directly from your E2E tests</p>
+    <div id="container">
+      <div class="inner">
 
-        <ul>
-          <li class="download"><a class="buttons" href="https://github.com/hypoport/node-config-ngscenario-dsl/zipball/master">Download ZIP</a></li>
-          <li class="download"><a class="buttons" href="https://github.com/hypoport/node-config-ngscenario-dsl/tarball/master">Download TAR</a></li>
-          <li><a class="buttons github" href="https://github.com/hypoport/node-config-ngscenario-dsl">View On GitHub</a></li>
-        </ul>
+        <header>
+          <h1>Node-config-ngscenario-dsl</h1>
+          <h2>A simple angular-scenario DSL for configuring a node.js backend directly from your E2E tests</h2>
+        </header>
 
-        <p class="header">This project is maintained by <a class="header name" href="https://github.com/hypoport">hypoport</a></p>
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/hypoport/node-config-ngscenario-dsl/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/hypoport/node-config-ngscenario-dsl/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/hypoport/node-config-ngscenario-dsl" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
 
+        <hr>
 
-      </header>
-      <section>
-        <h2>
+        <section id="main_content">
+          <p><a href="https://travis-ci.org/hypoport/node-config-ngscenario-dsl.png"><img src="https://travis-ci.org/hypoport/node-config-ngscenario-dsl.png" alt="Build Status"></a></p>
+
+<h2>
 <a name="introduction" class="anchor" href="#introduction"><span class="octicon octicon-link"></span></a>Introduction</h2>
 
 <p>A simple angular-scenario DSL for configuring a node.js backend directly from your e2e-tests. </p>
@@ -40,7 +43,9 @@
 <ol>
 <li>A node module providing an HTTP-based API for remote server configuration.</li>
 <li>An angular-scenario DSL providing a convenient client interface to the HTTP-based API.</li>
-</ol><h2>
+</ol><p><strong>Note</strong>: This library is currently tested against Angular 1.1.5, but it should also work with previous versions.</p>
+
+<h2>
 <a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
 
 <ul>
@@ -85,7 +90,9 @@ server.listen(2888);
 <h3>
 <a name="client" class="anchor" href="#client"><span class="octicon octicon-link"></span></a>Client</h3>
 
-<p>Include <a href="https://github.com/hypoport/node-config-ngscenario-dsl/blob/master/client-src/node-config-ngscenario-dsl.js">node-config-ngscenario-dsl.js</a> and <a href="http://jquery.com">jQuery</a> in your e2e-tests.</p>
+<p>Include <a href="https://github.com/hypoport/node-config-ngscenario-dsl/blob/master/client-src/node-config-ngscenario-dsl.js">node-config-ngscenario-dsl.js</a> and <a href="http://jquery.com">jQuery</a> (&gt;=1.9) in your e2e-tests.</p>
+
+<p><strong>Note</strong>: The jQuery dependency will be removed once Angular 1.2 is released. (See #2)</p>
 
 <p>Then start using the DSL in your e2e-tests:</p>
 
@@ -100,6 +107,12 @@ server().clear();
 </code></pre>
 
 <h2>
+<a name="more-information" class="anchor" href="#more-information"><span class="octicon octicon-link"></span></a>More Information</h2>
+
+<ul>
+<li>See <a href="https://github.com/hypoport/node-config-ngscenario-dsl/wiki/API-Documentation">API Documentation</a> for a detailed API description.</li>
+<li>Have a look at the <a href="https://github.com/hypoport/node-config-ngscenario-dsl/tree/master/int-tests">example</a> directory for a complete working example including karma and node server.</li>
+</ul><h2>
 <a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
 
 <ul>
@@ -109,12 +122,15 @@ server().clear();
 <li>Write some tests which show that the bug was fixed or that the feature works as expected.</li>
 <li>Send a pull request and bug the maintainer until it gets merged and published. :)</li>
 </ul>
-      </section>
-      <footer>
-        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
-      </footer>
+        </section>
+
+        <footer>
+          Node-config-ngscenario-dsl is maintained by <a href="https://github.com/hypoport">hypoport</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-		
   </body>
 </html>
