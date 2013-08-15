@@ -289,7 +289,7 @@ describe('Node Config NgScenario', function () {
           url: baseUrl + "/dummyRequest",
           timeout: 3000
         }, function (error, response) {
-          expect(error.code).toEqual('ETIMEDOUT');
+          expect(error.code).toMatch(/ETIMEDOUT|ESOCKETTIMEDOUT/);
           done()
         });
       });
