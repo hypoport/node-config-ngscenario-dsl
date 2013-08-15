@@ -72,7 +72,7 @@ server().clear();
 ## More Information
 
 * See [API Documentation](https://github.com/hypoport/node-config-ngscenario-dsl/wiki/API-Documentation) for a detailed API description.
-* Have a look at the [example](https://github.com/hypoport/node-config-ngscenario-dsl/tree/master/int-tests) directory for a complete working example including karma and node server.
+* Have a look at the [examples](https://github.com/hypoport/node-config-ngscenario-dsl/tree/master/examples) directory for a complete working example including karma and node server.
 
 ## Contributing
 
