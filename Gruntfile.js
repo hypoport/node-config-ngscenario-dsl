@@ -13,7 +13,7 @@ module.exports = function (grunt) {
     },
     karma: {
       e2e: {
-        configFile: 'int-tests/karma.conf.js'
+        configFile: 'examples/karma.conf.js'
       }
     }
   };
@@ -21,7 +21,7 @@ module.exports = function (grunt) {
   grunt.initConfig(initConfig);
 
   grunt.registerTask('start-int-test-webserver', 'Start the web server for int-tests.', function () {
-    require('./int-tests/server.js');
+    require('./examples/server.js');
   });
 
   grunt.registerTask('int-test', [
