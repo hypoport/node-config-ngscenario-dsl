@@ -19,82 +19,8 @@ var nodeConfigNgScenario = require('../lib/node-config-ngscenario-dsl.js');
 var request = require('request');
 var express = require('express');
 var http = require('http');
-
 var baseUrl = "http://127.0.0.1:2888";
-
-function createRequestConfig(method, statusCode, url) {
-  return {
-    method: 'POST',
-    url: baseUrl + '/config',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      requestConfig: {
-        method: method,
-        url: url
-      },
-      statusCode: statusCode
-    })
-  };
-}
-
-function createTimeoutConfig(method, url) {
-  return {
-    method: 'POST',
-    url: baseUrl + '/config',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      requestConfig: {
-        method: method,
-        url: url
-      },
-      generateTimeout: true
-    })
-  };
-}
-
-function createExpectRequest(method, url) {
-  return {
-    method: 'POST',
-    url: baseUrl + '/expectRequest',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      expectConfig: {
-        method: method,
-        url: url
-      }})
-  };
-}
-function createHasReceivedRequest(method, url) {
-  return {
-    method: 'POST',
-    url: baseUrl + '/hasReceived',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      expectConfig: {
-        method: method,
-        url: url
-      }})
-  };
-}
-
-function makeRequest(relativeUrl, expectedStatus, done) {
-  request(baseUrl + relativeUrl, function (error, response, body) {
-    expect(response.statusCode).toEqual(expectedStatus);
-    done();
-  });
-}
-
-function makeClearConfigRequest(done) {
-  makeRequest("/clearConfig", 200, done);
-}
+var TestRequestHelpers = require('./TestRequestHelpers').TestRequestHelpers(baseUrl);
 
 describe('Node Config NgScenario', function () {
   var app;
@@ -121,7 +47,7 @@ describe('Node Config NgScenario', function () {
 
     describe('when a request is configured', function () {
       beforeEach(function (done) {
-        var configRequest = createRequestConfig('GET', 500, '/dummyRequest');
+        var configRequest = TestRequestHelpers.createRequestConfig('GET', 500, '/dummyRequest');
         request(configRequest, function (error, response, body) {
           expect(response.statusCode).toEqual(200);
           done();
@@ -130,7 +56,7 @@ describe('Node Config NgScenario', function () {
 
       describe('and then cleared', function () {
         beforeEach(function (done) {
-          makeClearConfigRequest(done);
+          TestRequestHelpers.makeClearConfigRequest(done);
         });
         it('should restore the original state', function (done) {
           request(baseUrl + "/dummyRequest", function (error, response, body) {
@@ -148,15 +74,15 @@ describe('Node Config NgScenario', function () {
 
         it('for two request on the same url', function (done) {
 
-          request(createExpectRequest('GET', '/testUrl'), function (error, response, body) {
+          request(TestRequestHelpers.createExpectRequest('GET', '/testUrl'), function (error, response, body) {
             expect(response.statusCode).toEqual(200);
             done();
           });
 
-          makeRequest('/testUrl', 200, done);
-          makeRequest('/testUrl', 200, done);
+          TestRequestHelpers.makeRequest('/testUrl', 200, done);
+          TestRequestHelpers.makeRequest('/testUrl', 200, done);
 
-          request(createHasReceivedRequest('GET', '/testUrl'), function (error, response, body) {
+          request(TestRequestHelpers.createHasReceivedRequest('GET', '/testUrl'), function (error, response, body) {
             expect(response.statusCode).toEqual(200);
             expect(parseInt(response.body)).toEqual(2);
             done();
@@ -166,28 +92,27 @@ describe('Node Config NgScenario', function () {
 
         it('for one request and two requests on different urls', function (done) {
 
-          request(createExpectRequest('GET', '/testUrl1'), function (error, response, body) {
+          request(TestRequestHelpers.createExpectRequest('GET', '/testUrl1'), function (error, response, body) {
             expect(response.statusCode).toEqual(200);
             done();
           });
 
-          request(createExpectRequest('GET', '/testUrl2'), function (error, response, body) {
+          request(TestRequestHelpers.createExpectRequest('GET', '/testUrl2'), function (error, response, body) {
             expect(response.statusCode).toEqual(200);
             done();
           });
 
-          makeRequest('/testUrl1', 200, done);
+          TestRequestHelpers.makeRequest('/testUrl1', 200, done);
+          TestRequestHelpers.makeRequest('/testUrl2', 200, done);
+          TestRequestHelpers.makeRequest('/testUrl2', 200, done);
 
-          makeRequest('/testUrl2', 200, done);
-          makeRequest('/testUrl2', 200, done);
-
-          request(createHasReceivedRequest('GET', '/testUrl1'), function (error, response, body) {
+          request(TestRequestHelpers.createHasReceivedRequest('GET', '/testUrl1'), function (error, response, body) {
             expect(response.statusCode).toEqual(200);
             expect(parseInt(response.body)).toEqual(1);
             done();
           });
 
-          request(createHasReceivedRequest('GET', '/testUrl2'), function (error, response, body) {
+          request(TestRequestHelpers.createHasReceivedRequest('GET', '/testUrl2'), function (error, response, body) {
             expect(response.statusCode).toEqual(200);
             expect(parseInt(response.body)).toEqual(2);
             done();
@@ -206,12 +131,9 @@ describe('Node Config NgScenario', function () {
       });
 
       it('should stop counting after clearConfig', function (done) {
-
-        makeClearConfigRequest(done);
-
-        makeRequest('/testUrl', 200, done);
-
-        request(createHasReceivedRequest('GET', '/testUrl'), function (error, response, body) {
+        TestRequestHelpers.makeClearConfigRequest(done);
+        TestRequestHelpers.makeRequest('/testUrl', 200, done);
+        request(TestRequestHelpers.createHasReceivedRequest('GET', '/testUrl'), function (error, response, body) {
           expect(response.statusCode).toEqual(200);
           expect(parseInt(response.body)).toEqual(0);
           done();
@@ -219,11 +141,10 @@ describe('Node Config NgScenario', function () {
       });
 
       it('should reset the counter after clearConfig', function (done) {
-        makeRequest('/testUrl', 200, done);
-        makeRequest('/testUrl', 200, done);
-        makeClearConfigRequest(done);
-
-        request(createHasReceivedRequest('GET', '/testUrl'), function (error, response, body) {
+        TestRequestHelpers.makeRequest('/testUrl', 200, done);
+        TestRequestHelpers.makeRequest('/testUrl', 200, done);
+        TestRequestHelpers.makeClearConfigRequest(done);
+        request(TestRequestHelpers.createHasReceivedRequest('GET', '/testUrl'), function (error, response, body) {
           expect(response.statusCode).toEqual(200);
           expect(parseInt(response.body)).toEqual(0);
           done();
@@ -249,12 +170,12 @@ describe('Node Config NgScenario', function () {
     });
 
     it('should return 404 for dummy request', function (done) {
-      makeRequest("/dummyRequest", 404, done);
+      TestRequestHelpers.makeRequest("/dummyRequest", 404, done);
     });
 
     describe('when a dummy request handler gets configured', function () {
       beforeEach(function (done) {
-        var configRequest = createRequestConfig('GET', 500, '/dummyRequest');
+        var configRequest = TestRequestHelpers.createRequestConfig('GET', 500, '/dummyRequest');
         request(configRequest, function (error, response) {
           expect(response.statusCode).toEqual(200);
           done();
@@ -262,17 +183,17 @@ describe('Node Config NgScenario', function () {
       });
 
       afterEach(function (done) {
-        makeClearConfigRequest(done);
+        TestRequestHelpers.makeClearConfigRequest(done);
       });
 
       it('a request to it should return the configured response', function (done) {
-        makeRequest("/dummyRequest", 500, done);
+        TestRequestHelpers.makeRequest("/dummyRequest", 500, done);
       });
     });
 
     describe('when a timeout gets configured', function () {
       beforeEach(function (done) {
-        var configRequest = createTimeoutConfig('GET', '/dummyRequest');
+        var configRequest = TestRequestHelpers.createTimeoutConfig('GET', '/dummyRequest');
         request(configRequest, function (error, response) {
           expect(response.statusCode).toEqual(200);
           done();
@@ -280,7 +201,7 @@ describe('Node Config NgScenario', function () {
       });
 
       afterEach(function (done) {
-        makeClearConfigRequest(done);
+        TestRequestHelpers.makeClearConfigRequest(done);
       });
 
       it('should generate a timeout', function (done) {
@@ -313,7 +234,7 @@ describe('Node Config NgScenario', function () {
     });
 
     it('should be set for the config request', function (done) {
-      request(createRequestConfig('GET', 500, '/dummyRequest'), function (error, response, body) {
+      request(TestRequestHelpers.createRequestConfig('GET', 500, '/dummyRequest'), function (error, response, body) {
         expect(response.headers['cache-control']).toEqual('no-cache');
         done();
       });
@@ -327,14 +248,14 @@ describe('Node Config NgScenario', function () {
     });
 
     it('should be set for the hasReceive request', function (done) {
-      request(createHasReceivedRequest('GET', '/testUrl'), function (error, response, body) {
+      request(TestRequestHelpers.createHasReceivedRequest('GET', '/testUrl'), function (error, response, body) {
         expect(response.headers['cache-control']).toEqual('no-cache');
         done();
       });
     });
 
     it('should be set for the expectRequest request', function (done) {
-      request(createExpectRequest('GET', '/testUrl'), function (error, response, body) {
+      request(TestRequestHelpers.createExpectRequest('GET', '/testUrl'), function (error, response, body) {
         expect(response.headers['cache-control']).toEqual('no-cache');
         done();
       });
@@ -342,7 +263,7 @@ describe('Node Config NgScenario', function () {
 
     it('should be set for a registered request', function (done) {
 
-      request(createRequestConfig('GET', 200, '/dummyRequest'), function (error, response) {
+      request(TestRequestHelpers.createRequestConfig('GET', 200, '/dummyRequest'), function (error, response) {
         expect(response.statusCode).toEqual(200);
         done();
       });
@@ -354,5 +275,4 @@ describe('Node Config NgScenario', function () {
       });
     });
   });
-})
-;
+});

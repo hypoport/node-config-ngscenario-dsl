@@ -70,6 +70,6 @@ describe('ngscenario nodejs dsl test', function () {
 
     server().hasReceived({method: 'GET', url: "/dummyVerifyRequest"}).times(3);
     server().clear();
-  })
+  });
 
 });
